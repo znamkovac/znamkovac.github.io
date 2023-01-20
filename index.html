@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+
+    <meta charset="utf-8">
+    <title>Známkovač</title>
+
+    <style>
+      html,body {
+
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+
+        margin: 0;
+
+      }
+
+
+      #container {
+        position: absolute;
+        left: 50%;
+        top: 30%;
+
+        width: 500px;
+        padding: 20px;
+
+        transform: translate(-50%, -30%);
+
+        font-family: Arial;
+      }
+
+      #title {
+        margin-bottom: 20px;
+        padding-left: 10px;
+      }
+
+      #area {
+        box-sizing: border-box;
+        outline: none !important;
+        border: none !important;
+        resize: none !important;
+        width: 100%;
+        height: 40px;
+        min-height: 40px;
+
+        padding: 10px;
+        margin-bottom: 10px;
+
+        background: #eeeeee;
+      }
+
+      #result {
+        padding-left: 10px;
+      }
+    </style>
+
+  </head>
+  <body>
+
+    <div id="container">
+      <h1 id="title">Známkovač</h1>
+      <textarea id="area" autofocus></textarea>
+      <div id="result">Zadejte známky</div>
+    </div>
+
+    <script>
+        (() => {
+
+            const area = document.getElementById("area");
+            const result = document.getElementById("result");
+
+            const averager = (sum, item, index, array) => {
+                sum += item;
+
+                if ( index + 1 == array.length ) {
+                    return sum / array.length;
+
+                } else {
+                    return sum;
+                }
+            }
+
+            area.oninput = () => {
+                area.style.height = "";
+                area.style.height = area.scrollHeight + "px"
+
+                try {
+                    const average = area.value
+                        .replaceAll(/-/g, ".5")
+                        .replaceAll(/\s+/g, "\n")
+                        .split("\n")
+                        .filter(mark=>mark)
+                        .map(parseFloat)
+                        .reduce(averager);
+                    if (isNaN(average))
+                      throw new Error("NaN");
+
+                    result.innerHTML = "Průměr: " + average.toFixed(2);
+                } catch (e) {
+                    result.innerHTML = "Chyba ve výpočtu";
+                }
+            }
+
+        })();
+    </script>
+
+  </body>
+</html>
